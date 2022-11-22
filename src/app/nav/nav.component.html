@@ -18,12 +18,13 @@
         </ul>
         
         <div class="navbar-nav" *ngIf="(accountservices.CurrentUser$ | async) as user">
+          <img src="{{user.photo || '../../../../assets/user.png'}}"  width="40">
           <li class="nav-item btn-group" dropdown>
             <a class="nav-link dropdown-toggle" id="button-animated" dropdownToggle type="button" aria-controls="dropdown-animated"> welcome {{user.userName | titlecase}}</a>
             <ul id="dropdown-animated" *dropdownMenu class="dropdown-menu"
                 role="menu" aria-labelledby="button-animated">
-                <li role="menuitem"><a class="dropdown-item" href="#">Action</a></li>
-                <li role="menuitem"><a class="dropdown-item" href="#" (click)="logout()">logout</a></li>
+                <li role="menuitem"><a class="dropdown-item" routerLink="/edit">Edit Profile</a></li>
+                <li role="menuitem"><a class="dropdown-item" (click)="logout()">logout</a></li>
             </ul>  
           </li>    
         </div> 

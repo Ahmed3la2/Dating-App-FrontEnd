@@ -12,10 +12,8 @@ import { AccountService } from '../_services/account.service';
 export class NavComponent implements OnInit {
   model:any = {};
   logging:boolean = false;
-  user:User= {
-    userName: '',
-    token: ''
-  };
+  user!:any
+  
 
   constructor(public accountservices:AccountService, private router:Router, private toast:ToastrService) { }
 
@@ -24,8 +22,7 @@ export class NavComponent implements OnInit {
   }
 
   login(){
-    this.accountservices.login(this.model).subscribe(res => {
-      console.log(res)
+    this.accountservices.login(this.model).subscribe(() => {
       this.router.navigateByUrl("/members")
       this.logging = true;
     })
@@ -41,6 +38,9 @@ export class NavComponent implements OnInit {
   getCurrentUser(){
     this.accountservices.CurrentUser$.subscribe(user=>{
       this.logging = !!user;
+      this.accountservices.CurrentUser$.subscribe(x => {
+        this.user = x
+      })
     })
   }
 

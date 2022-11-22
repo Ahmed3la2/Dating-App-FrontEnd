@@ -10,6 +10,7 @@ import { map } from "rxjs/operators";
 })
 export class AuthGuard implements CanActivate {
   constructor(private accountServices: AccountService, private toast:ToastrService){}
+  
   canActivate(): Observable<boolean> {
    return this.accountServices.CurrentUser$.pipe(map(u => {
       if(u) return true

@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { map, pipe } from 'rxjs';
 import { AuthGuard } from 'src/_guards/auth.guard';
+import { PreventUnsaveChangeGuard } from 'src/_guards/prevent-unsave-change.guard';
 import { HomeComponent } from './home/home.component';
 import { ListsComponent } from './lists/lists.component';
+import { EditProfileComponent } from './members/edit-profile/edit-profile.component';
 import { MemberDetailComponent } from './members/member-detail/member-detail.component';
 import { MemberListComponent } from './members/member-list/member-list.component';
 import { MessagesComponent } from './messages/messages.component';
@@ -19,7 +21,8 @@ const routes: Routes = [
     canActivate:[AuthGuard],
     children:[
       {path:"members", component:MemberListComponent,canActivate:[AuthGuard]},
-      {path:"members/:id", component:MemberDetailComponent},
+      {path:"members/:username", component:MemberDetailComponent},
+      {path:"edit", component:EditProfileComponent,canDeactivate:[PreventUnsaveChangeGuard]},
       {path:"lists", component:ListsComponent},
       {path:"messages", component:MessagesComponent},
     ]

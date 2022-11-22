@@ -2,16 +2,17 @@ import { HttpClient  } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, ReplaySubject } from 'rxjs';
 import { User } from 'src/app/_model/user.model'
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccountService {
+  [x: string]: any;
 
-  basrUrl = 'https://localhost:44382/api/'
+  basrUrl = environment.apiUrl;
   private CurrentUserSource = new ReplaySubject<User|null>(1);
   CurrentUser$ = this.CurrentUserSource.asObservable();
-  static CurrentUser$: any;
   constructor(private http : HttpClient) {}
 
       login(model: User){
@@ -19,9 +20,9 @@ export class AccountService {
           map((res: any) => {
             const user = res;
             if(user){
+              this.setCurrentUser(user)
               localStorage.setItem("user", JSON.stringify(user));
-              this.CurrentUserSource.next(user)
-              return res
+              return user
             }
           })
         )
@@ -31,9 +32,9 @@ export class AccountService {
           map((res: User) => {
             const user = res;
             if(user){
+              this.setCurrentUser(user)
               localStorage.setItem("user", JSON.stringify(user));
-              this.CurrentUserSource.next(user)
-              return res
+              return user
             }
             return null
           })
@@ -41,7 +42,8 @@ export class AccountService {
         )
       }
       setCurrentUser(user: User){
-      this.CurrentUserSource.next(user);
+        localStorage.setItem("user", JSON.stringify(user));
+        this.CurrentUserSource.next(user);
     }
 
      logout(){
