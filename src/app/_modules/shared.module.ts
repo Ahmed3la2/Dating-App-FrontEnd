@@ -5,6 +5,10 @@ import { TabsModule } from 'ngx-bootstrap/tabs';
 import { ToastrModule } from 'ngx-toastr';
 import { FileUploadModule } from 'ng2-file-upload';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { ButtonsModule } from 'ngx-bootstrap/buttons';
+import { TimeagoModule } from "ngx-timeago";
+
 
 
 
@@ -18,7 +22,10 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
       positionClass:'toast-bottom-right'
     }),
     TabsModule.forRoot(),
+    PaginationModule.forRoot(),
     FileUploadModule,
+    ButtonsModule.forRoot(),
+    TimeagoModule.forRoot(),
   ],
   exports:[
     BsDropdownModule,
@@ -26,6 +33,9 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     TabsModule,
     FileUploadModule,
     BsDatepickerModule,
+    PaginationModule,
+    ButtonsModule,
+    TimeagoModule
   ]
 })
 export class SharedModule { }

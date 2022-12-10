@@ -1,51 +1,86 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { JsonPipe } from '@angular/common';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_model/member.model';
-import { Photo } from '../_model/Photo';
-
-// const httpOption = {
-//  headers: new HttpHeaders({
-//   Authorization: "Bearer " + JSON.parse(localStorage.getItem('user')!).token,
-//   "Content-Type":"application/json"
-//  })
-// }
+import { PaginatedResult } from '../_model/pagination';
+import { UserParams } from '../_model/userParams';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MemberService {
   members: Member[] = [];
-  baseUrll = environment.apiUrl
+  paginatedResult : PaginatedResult<Member[]>= new PaginatedResult<Member[]>() ;
+  baseUrl = environment.apiUrl
   constructor(private http: HttpClient) {}
 
-  GetMembers() : Observable<Member[]>{
-    if(this.members.length > 0) return of(this.members);
-    return this.http.get<Member[]>(this.baseUrll + "User/allusers").pipe(
-      map(members => {
-        this.members = members
-        return members;
-    }));
+  GetMembers(UserParams: UserParams) : Observable<PaginatedResult<Member[]>>  {  
+    let params = this.GetPaginationHeaders(UserParams.PageNumber, UserParams.PageSize);
+
+    params = params.append("MiniAge", UserParams.MiniAge.toString())
+    params = params.append("MaxAge", UserParams.MaxAge.toString())
+    params = params.append("Gender", UserParams.Gender)
+    params = params.append("OrderBy", UserParams.OrderBy)
+    
+
+    return this.http.get<PaginatedResult<Member[]>>(this.baseUrl + "User/allusers", {observe:"response", params}).pipe(
+      map(response => {
+        this.paginatedResult.result = response.body as any;
+        if(response.headers.get("pagination") != null) {
+          this.paginatedResult.pagination = JSON.parse(response.headers.get("pagination") as any) 
+        }
+        return this.paginatedResult;
+      })
+
+    );
+  }
+
+  private GetPaginationHeaders(PageNumeber : Number,  PageSize : Number){
+    let params =  new HttpParams();
+      params = params.append("PageNumber", PageNumeber.toString());
+      params = params.append("PageSize"  , PageSize.toString());
+      return params
   }
 
   GetMember(username: string) {
     const member = this.members.find(x => x.userName === username);
     if(member != undefined) return of(member);
 
-    return this.http.get<Member>(this.baseUrll + 'User/user' + username)
+    return this.http.get<Member>(this.baseUrl + 'User/user' + username)
   }
 
   UpdateMemeber(member:Member) {
-    return this.http.put(this.baseUrll + 'User', member)
+    return this.http.put(this.baseUrl + 'User', member)
   }
 
   SetMainPhoto(id :Number){
-    return this.http.put(this.baseUrll + `User/set-main-photo/${id}`, {})
+    return this.http.put(this.baseUrl + `User/set-main-photo/${id}`, {})
   }
 
   deletePhoto(id:Number){
-    return this.http.delete(this.baseUrll + `User/delete-photo/${id}`)
+    return this.http.delete(this.baseUrl + `User/delete-photo/${id}`)
+  }
+  AddLike(id:Number) {
+     return this.http.post(`${this.baseUrl}UserLikes/${id}`, {});
+  }
+
+  getLikes(perdicate: string, PageNumber: number, PageSize: number): Observable<PaginatedResult<Member[]>>  {
+    let params =  new HttpParams();
+    params = params.append("PageNumber", PageNumber.toString());
+    params = params.append("PageSize", PageSize.toString());
+    params = params.append("Perdicate", perdicate);
+
+    return this.http.get<PaginatedResult<Member[]>>(`${this.baseUrl}UserLikes`, {observe:"response", params}).pipe(
+      map(response => {
+        this.paginatedResult.result = response.body as any;
+        if(response.headers.get("pagination") != null) {
+          this.paginatedResult.pagination = JSON.parse(response.headers.get("pagination") as any) 
+        }
+        return this.paginatedResult;
+      })
+    );
   }
 }
 

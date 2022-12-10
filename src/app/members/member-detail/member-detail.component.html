@@ -9,16 +9,20 @@
                     <p>{{member.city}}, {{member.country}}</p>
                 </div>
                 <div>
+                    <strong>Gender:</strong>
+                    <p>{{member.gender}}</p>
+                </div>
+                <div>
                     <strong>Age:</strong>
                     <p>{{member.age}}</p>
                 </div>
                 <div>
                     <strong>Last Active:</strong>
-                    <p>{{member.lastActive}}</p>
+                    <p>{{member.lastActive | timeago}}</p>
                 </div>
                 <div>
                     <strong>Member since:</strong>
-                    <p>{{member.created}}</p>
+                    <p>{{member.created | date : 'dd MMM yyyy'}}</p>
                 </div>
             </div>
             <div class="card-footer">
@@ -46,7 +50,7 @@
                     Photos
                 </tab>
                 <tab heading='Messages'>
-                    <p>Messages will go here</p>
+                    <app-member-messages [username]="member.userName"></app-member-messages>
                 </tab>
             </tabset>
         </div>
