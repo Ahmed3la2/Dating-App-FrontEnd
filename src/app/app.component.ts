@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import {User} from '../app/_model/user.model'
 import { AccountService } from './_services/account.service';
+import { PresenceService } from './_services/presence.service';
 
 
 @Component({
@@ -10,18 +11,22 @@ import { AccountService } from './_services/account.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  constructor(private http : HttpClient, private accountservices:AccountService){}
+  constructor(private accountservices:AccountService, private presence:PresenceService){}
   ngOnInit(): void {
     this.setCurrentUser();
   }
 
   setCurrentUser(){
    const user: User = JSON.parse(localStorage.getItem("user")!);
-   this.accountservices.setCurrentUser(user);
+   if(user){
+     this.accountservices.setCurrentUser(user);
+     this.presence.createHubConnection(user);
+   }
   }
 
   logOut(){
     this.accountservices.logout();
+    this.presence.stopHubConnection()
   }
 
   title = 'client';

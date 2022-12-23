@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -23,6 +23,11 @@ import { LoadingInterceptor } from './_interceptors/loading.interceptor';
 import { PhotoEditorComponent } from './members/photo-editor/photo-editor.component';
 import { JwtInterceptor } from './_interceptors/jwt.interceptor';
 import { MemberMessagesComponent } from './members/member-messages/member-messages.component';
+import { AdminComponent } from './_admin/admin.component';
+import { HasRoleDirective } from '../_directives/has-role.directive'
+import { UserManagmentComponent } from './_admin/user-managment/user-managment.component';
+import { PhotoManagmentComponent } from './_admin/photo-managment/photo-managment.component';
+import { RolesModalComponent } from './_modals/roles-modal/roles-modal.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +44,13 @@ import { MemberMessagesComponent } from './members/member-messages/member-messag
     MemberCardComponent,
     EditProfileComponent,
     PhotoEditorComponent,
-    MemberMessagesComponent
+    MemberMessagesComponent,
+    AdminComponent,
+    PhotoManagmentComponent,
+    UserManagmentComponent,
+    HasRoleDirective,
+    RolesModalComponent,
+    
   ],
   imports: [
     BrowserModule,
@@ -48,8 +59,9 @@ import { MemberMessagesComponent } from './members/member-messages/member-messag
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    SharedModule,
     NgxSpinnerModule,
+    SharedModule,
+    
   ],
   providers: [
     {provide:HTTP_INTERCEPTORS, useClass:ErrorInterceptor, multi: true},

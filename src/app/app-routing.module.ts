@@ -12,6 +12,9 @@ import { MessagesComponent } from './messages/messages.component';
 import { NotFoundComponent } from './_errors/not-found/not-found.component';
 import { ServerErrorComponent } from './_errors/server-error/server-error.component';
 import { AccountService } from './_services/account.service';
+import { MemberDetailResolver } from "./_resolvers/member-detail.resolver";
+import { AdminComponent } from './_admin/admin.component';
+import { AdminGuardGuard } from 'src/_guards/admin-guard.guard';
 
 const routes: Routes = [
   {path:"", component:HomeComponent},
@@ -21,10 +24,11 @@ const routes: Routes = [
     canActivate:[AuthGuard],
     children:[
       {path:"members", component:MemberListComponent,canActivate:[AuthGuard]},
-      {path:"members/:username", component:MemberDetailComponent},
+      {path:"members/:username", component:MemberDetailComponent, resolve:{member: MemberDetailResolver}},
       {path:"edit", component:EditProfileComponent,canDeactivate:[PreventUnsaveChangeGuard]},
       {path:"lists", component:ListsComponent},
       {path:"messages", component:MessagesComponent},
+      {path:"admin", component:AdminComponent, canActivate:[AdminGuardGuard]},
     ]
   },
   {path:"not-found", component:NotFoundComponent},

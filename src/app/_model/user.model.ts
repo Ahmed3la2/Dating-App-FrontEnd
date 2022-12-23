@@ -4,4 +4,5 @@ export interface User {
     photo:string,
     knownAs: string,
     gender :string
+    roles :string[]
 }

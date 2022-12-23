@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, RouterStateSnapshot, UrlTree } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { Observable} from 'rxjs';
 import { AccountService } from 'src/app/_services/account.service';
@@ -9,11 +9,13 @@ import { map } from "rxjs/operators";
   providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-  constructor(private accountServices: AccountService, private toast:ToastrService){}
+  constructor(private accountServices: AccountService, private toast:ToastrService, private route :Router){}
   
   canActivate(): Observable<boolean> {
    return this.accountServices.CurrentUser$.pipe(map(u => {
-      if(u) return true
+      if(u){
+        return true
+      } 
       else{
         this.toast.error("You Shall Not Pass")
         return false

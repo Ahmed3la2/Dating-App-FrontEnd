@@ -5,7 +5,7 @@ import { Photo } from "./Photo";
         userName: string;
         age: number;
         photoUrl: string;
-        lastActive: string;
+        lastActive: string | null;
         knownAs: string;
         created: Date;
         gender: string;

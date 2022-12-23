@@ -1,6 +1,6 @@
-    export interface messageContent {
-       content:string,
-       recipientUsername:string
+    export class messageContent {
+       content!:string ;
+       recipientUsername!:string;
     }
 
         

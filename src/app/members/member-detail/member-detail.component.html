@@ -1,57 +1,69 @@
-<div class="row" *ngIf="member">
+<div class="row">
     <div class="col-4">
         <div class="card">
             <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}" 
                 class="card-img-top img-thumbnail">
             <div class="card-body">
+                <div class="mb-2" *ngIf="(presenceService.onlineUser$ | async)?.includes(member.userName)">
+                    <i class="class fa fa-user-circle text-success"></i> Online now
+                </div>
                 <div>
                     <strong>Location:</strong>
-                    <p>{{member.city}}, {{member.country}}</p>
+                    <p>{{member .city}}, {{member .country}}</p>
                 </div>
                 <div>
                     <strong>Gender:</strong>
-                    <p>{{member.gender}}</p>
+                    <p>{{member .gender}}</p>
                 </div>
                 <div>
                     <strong>Age:</strong>
-                    <p>{{member.age}}</p>
+                    <p>{{member .age}}</p>
                 </div>
                 <div>
                     <strong>Last Active:</strong>
-                    <p>{{member.lastActive | timeago}}</p>
+                    <p>{{member .lastActive | timeago  }}</p>
                 </div>
                 <div>
                     <strong>Member since:</strong>
-                    <p>{{member.created | date : 'dd MMM yyyy'}}</p>
+                    <p>{{member .created | date : 'dd MMM yyyy'}}</p>
                 </div>
             </div>
             <div class="card-footer">
                 <div class="btn-group d-flex">
                     <button class="btn btn-primary">Like</button>
-                    <button class="btn btn-success">Message</button>
+                    <button (click)="selectTab(3)" class="btn btn-success">Message</button>
                 </div>
             </div>
         </div>
     </div>
 
         <div class="col-8">
-            <tabset class="member-tabset">
-                <tab heading='About {{member.knownAs}}'>
+            <tabset class="member-tabset" #memberTabs >
+                <tab (selectTab)="onTabActivate($event)" (selectTab)="OnactiveTab(0)" heading='About {{member .knownAs}}'>
                     <h4>Description</h4>
-                    <p>{{member.indroduction}}</p>
+                    <p>{{member .indroduction}}</p>
                     <h4>Looking for</h4>
-                    <p>{{member.lookingFor}}</p>
+                    <p>{{member .lookingFor}}</p>
                 </tab>
-                <tab heading='Interests'>
+                <tab (selectTab)="onTabActivate($event)" (selectTab)="OnactiveTab(1)" heading='Interests'>
                     <h4>Interests</h4>
-                    <p>{{member.intrest}}</p>
+                    <p>{{member .intrest}}</p>
                 </tab>
-                <tab heading='Photos'>
-                    Photos
+                <tab (selectTab)="getmemberPhoto()" (selectTab)="onTabActivate($event)" (selectTab)="OnactiveTab(2)" heading='Photos'>
+                    <ngx-gallery [options]="galleryOptions" [images]="galleryImages" class="ngx-gallery"></ngx-gallery>
                 </tab>
-                <tab heading='Messages'>
-                    <app-member-messages [username]="member.userName"></app-member-messages>
+                <tab (selectTab)="onTabActivate($event)" (selectTab)="OnactiveTab(3)" heading='Messages'>
+                    <app-member-messages  [username]="member.userName" [pageNum]="pageNumber"></app-member-messages>
                 </tab>
             </tabset>
+            <div  class="d-flex justify-content-center">
+                <pagination *ngIf="activeTabb"
+                [boundaryLinks]="true"
+                [totalItems]="messageServices.totalCount"
+                [itemsPerPage]="10"
+                (pageChanged)="pageChange($event)"
+                >
+                </pagination>
+            </div>
         </div>
 </div>

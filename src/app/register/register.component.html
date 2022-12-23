@@ -32,6 +32,12 @@
         <input
          [class.is-invalid]='registerForm.get("DateOfBirth")?.errors && registerForm.get("DateOfBirth")?.touched'
          type="text"
+         matInput
+         ngxDaterangepickerMd
+         formControlName="dateFilter"
+         placeholder="Choose date" 
+         [maxDate]="maxDate"
+         [minDate]="miniDate"
          bsDatepicker
          [bsConfig]="bsconfig"
          class="form-control is-invalid"

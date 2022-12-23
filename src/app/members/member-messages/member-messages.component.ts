@@ -1,6 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { messages } from 'src/app/_model/Messages.model';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { NgForm } from '@angular/forms';
+import { messageContent } from 'src/app/_model/messgeContent.model';
 import { MessageService } from 'src/app/_services/message.service';
+import { Messages } from '../../_model/messages.model';
 
 @Component({
   selector: 'app-member-messages',
@@ -8,25 +10,28 @@ import { MessageService } from 'src/app/_services/message.service';
   styleUrls: ['./member-messages.component.css']
 })
 export class MemberMessagesComponent implements OnInit {
-  @Input() username?: string;
-  messages:messages[] = [];
-  messageContent = '';
+  @Input() messages:Messages[] = [];
+  @Input() username!:string;
+  @Input() pageNum!:number
+  @ViewChild('messageForm') input!: NgForm
 
-  constructor(private messsagesService: MessageService) {}
-
-  ngOnInit(): void {
-    this.loadMessages()
+  messageContent:messageContent = new messageContent()
+  
+  constructor(public MessaggesService:MessageService) {
+    this.messages.reverse()
   }
 
-  loadMessages(){
-    this.messsagesService.GetConversaTion(this.username).subscribe(m =>{
-      this.messages = m 
-      console.log(m)
-    })
+  ngOnInit(): void {
   }
 
   sendMessage(){
-    this.sendMessage()
+    this.messageContent.recipientUsername = this.username;
+    if(this.pageNum > 1) {
+      location.reload()
+    }
+    this.MessaggesService.sendMessageThread(this.messageContent).then(() => {
+      this.input.reset()
+    })
   }
 
 }

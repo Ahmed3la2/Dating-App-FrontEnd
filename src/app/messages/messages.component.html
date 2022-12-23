@@ -43,10 +43,10 @@
         </thead>
         <tbody class="align-middle">
             <tr [hidden]="loading" *ngFor="let message of messages"
-                routerLink="{{messageParams.container === 'Outbox' 
+                routerLink="{{messageParams.container === 'outbox' 
                     ? '/members/' + message.recipientUserName 
-                    : '/members/' + message.senderUserName}}"
-                [queryParams]="{tab: 'Messages'}"
+                    : '/members/' + message.senderUserName}}" [queryParams]='{tab: 3}'
+                     
             >
                 <td>{{message.content}}</td>
                 <td>
@@ -66,9 +66,9 @@
                     </div>
                 </td>
                 <td>{{message.messageSent | timeago}}</td>
-                <!-- <td>
+                <td>
                     <button (click)="$event.stopPropagation()" (click)="deleteMessage(message.id)" class="btn btn-danger">Delete</button>
-                </td> -->
+                </td> 
             </tr>
         </tbody>
     </table>
@@ -79,12 +79,7 @@
         [boundaryLinks]="true" 
         [totalItems]="pagination.totalItems"
         [itemsPerPage]="pagination.itemsPerPage"
-        [maxSize]="10"
-        [(ngModel)]="pagination.currentPage"
         (pageChanged)="pageChanged($event)"
-        previousText="&lsaquo;" 
-        nextText="&rsaquo;" 
-        firstText="&laquo;" 
-        lastText="&raquo;">
+       >
     </pagination>
 </div>

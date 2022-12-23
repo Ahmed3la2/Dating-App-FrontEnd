@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { messages } from '../_model/Messages.model';
+import { Messages } from '../_model/Messages.model';
 import { MessagesParam } from '../_model/messagesParam';
 import { Pagination } from '../_model/pagination';
 import { MessageService } from '../_services/message.service';
@@ -11,28 +11,32 @@ import { MessageService } from '../_services/message.service';
 })
 export class MessagesComponent implements OnInit {
   messageParams:MessagesParam = new MessagesParam();
-  messages!:messages[]
+  messages!:Messages[]
   pagination!: Pagination
   loading = false;
-  constructor(private messageSerice: MessageService) {}
+  constructor(public messageService: MessageService) {}
 
   ngOnInit(): void {
     this.loadMessages()
   }
 
   loadMessages(){
-    this.messageSerice.Getmessages(this.messageParams).subscribe(m => {
+    this.messageService.Getmessages(this.messageParams).subscribe(m => {
       this.messages = m.result as any;
       this.pagination = m.pagination;      
+      console.log(this.pagination);
+      
     })
   }
-
-  GetMessageThread(){
-
+  pageChanged(e: any) {  
+    this.messageParams.PageNumber = e.page;
+    this.loadMessages();
   }
 
-  pageChanged(e: any) {
-    this.messageParams.PageNumber = e;
-    this.loadMessages;
+  deleteMessage(id:number){
+    this.messageService.deleteMessage(id).subscribe(m => {
+      this.messages.splice(this.messages.findIndex(m => m.id == id), 1)
+     console.log(id);   
+    })
   }
 }

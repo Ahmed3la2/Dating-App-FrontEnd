@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+
 import { Router } from '@angular/router';
+import { moment } from 'ngx-bootstrap/chronos/testing/chain';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { AccountService } from '../_services/account.service';
 
@@ -14,6 +16,9 @@ export class RegisterComponent implements OnInit {
   registerForm!: FormGroup;
   bsconfig!:Partial<BsDatepickerConfig>
   valdationError :string[] = []
+  IsUserActive!:boolean;
+  maxDate = new Date();
+  miniDate = new Date();
 
   @Input() usersFormHomeComp:any = [];
   @Output()  cancelRegitser = new EventEmitter();
@@ -26,6 +31,8 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.initializeFrom();
+    this.maxDate.setFullYear(this.maxDate.getFullYear() -18);
+    this.miniDate.setFullYear(this.maxDate.getFullYear() -100);
   }
 
   initializeFrom(){

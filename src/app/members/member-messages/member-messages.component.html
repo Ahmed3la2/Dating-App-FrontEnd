@@ -1,11 +1,11 @@
 <div class="card">
     <div class="card-body">
-        <div *ngIf="messages?.length=== 0">
+        <div *ngIf="(MessaggesService.messageThread$ | async)!.length === 0">
             No messages yet... say hi by using the message box below
         </div>
 
-        <ul *ngIf="messages.length > 0" class="chat">
-            <li *ngFor="let message of messages">
+        <ul *ngIf="(MessaggesService.messageThread$ | async)!.length > 0 " class="chat">
+            <li *ngFor="let message of (MessaggesService.messageThread$ | async)!.slice().reverse()">
                 <div>
                     <span class="chat-img float-end">
                         <img class="rounded-circle" 
@@ -15,11 +15,13 @@
                     <div class="chat-body">
                         <div class="header">
                             <small class="text-muted">
-                                <span class="fa fa-clock-o">{{message.messageSent + 'Z' | timeago}}</span>
+                                <span class="fa fa-clock-o">{{message.messageSent | timeago}}</span>
+                                
                                 <span class="text-danger" *ngIf="!message.dateRead 
                                     && message.senderUserName !== username">(unread)</span>
+
                                 <span class="text-success" *ngIf="message.dateRead 
-                                    && message.senderUserName !== username">(read {{message.dateRead + 'Z' | timeago}})</span>
+                                    && message.senderUserName !== username">(read {{message.dateRead | timeago }})</span>
                             </small>
                         </div>
                         <p>{{message.content}}</p>
@@ -33,9 +35,10 @@
         <form #messageForm="ngForm" (ngSubmit)="sendMessage()" autocomplete="off">
             <div class="input-group">
                 <input 
+                    #inp
                     name="messageContent"
                     required
-                    [(ngModel)]="messageContent"
+                    [(ngModel)]="messageContent.content"
                     type="text" 
                     class="form-control input-sm" 
                     placeholder="Send a private message">
@@ -45,4 +48,5 @@
             </div>
         </form>
     </div>
+
 </div>

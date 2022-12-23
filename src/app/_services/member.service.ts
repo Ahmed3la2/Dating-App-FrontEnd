@@ -5,6 +5,7 @@ import { map, Observable, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Member } from '../_model/member.model';
 import { PaginatedResult } from '../_model/pagination';
+import { Photo } from '../_model/Photo';
 import { UserParams } from '../_model/userParams';
 
 @Injectable({
@@ -81,6 +82,10 @@ export class MemberService {
         return this.paginatedResult;
       })
     );
+  }
+
+  getUserPhoto(userName:string): Observable<Photo[]>{
+    return this.http.get<Photo[]>(`${this.baseUrl}User/get-member-photo?userName=${userName}`)
   }
 }
 
